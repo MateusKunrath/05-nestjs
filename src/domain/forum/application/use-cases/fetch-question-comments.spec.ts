@@ -46,7 +46,6 @@ describe('Fetch question comments use case', () => {
     })
 
     expect(result.value?.comments).toHaveLength(3)
-    console.log(result.value?.comments)
     expect(result.value?.comments).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
