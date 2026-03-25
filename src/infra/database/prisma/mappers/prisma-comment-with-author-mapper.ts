@@ -1,0 +1,28 @@
+import {
+  Comment as PrismaComment,
+  User as PrismaUser,
+} from 'prisma/generated/prisma/client'
+
+import { CommentWithAuthor } from '@/domain/forum/enterprise/entities/value-objects/comment-with-author'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+
+type PrismaCommentWithAuthor = PrismaComment & {
+  author: PrismaUser
+}
+
+export class PrismaCommentWithAuthorMapper {
+  static toDomain(raw: PrismaCommentWithAuthor): CommentWithAuthor {
+    return CommentWithAuthor.create({
+      comment: {
+        id: new UniqueEntityID(raw.id),
+        content: raw.content,
+      },
+      author: {
+        id: new UniqueEntityID(raw.author.id),
+        name: raw.author.name,
+      },
+      createdAt: raw.createdAt,
+      updatedAt: raw.updatedAt,
+    })
+  }
+}
