@@ -1,4 +1,7 @@
-import { Attachment as PrismaAttachment } from 'prisma/generated/prisma/client'
+import {
+  Prisma,
+  Attachment as PrismaAttachment,
+} from 'prisma/generated/prisma/client'
 import { QuestionAttachment } from '@/domain/forum/enterprise/entities/question-attachment'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
@@ -15,5 +18,22 @@ export class PrismaQuestionAttachmentMapper {
       },
       new UniqueEntityID(raw.id),
     )
+  }
+
+  static toPrismaUpdateMany(
+    attachments: QuestionAttachment[],
+  ): Prisma.AttachmentUpdateManyArgs {
+    const attachmentsIds = attachments.map((a) => a.attachmentId.toString())
+
+    return {
+      where: {
+        id: {
+          in: attachmentsIds,
+        },
+      },
+      data: {
+        questionId: attachments[0].questionId.toString(),
+      },
+    }
   }
 }
